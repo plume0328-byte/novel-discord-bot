@@ -69,10 +69,11 @@ async def on_message(message):
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(webhook_url, json=payload, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+                response_text = await resp.text()
                 if resp.status == 200:
-                    print(f"✅ 已成功傳送到 N8N")
+                    print(f"✅ 已成功傳送到 N8N：{response_text[:100]}")
                 else:
-                    print(f"⚠️ N8N 回應異常：{resp.status}")
+                    print(f"⚠️ N8N 回應異常：{resp.status} | URL：{webhook_url} | 回應：{response_text[:200]}")
     except Exception as e:
         print(f"❌ 傳送失敗：{e}")
 
